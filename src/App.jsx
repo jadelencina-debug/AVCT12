@@ -12,6 +12,7 @@ import AdminEditModal from './components/AdminEditModal';
 import PaginaArrepentimiento from './pages/Arrepentimiento';
 import { useAuth } from './context/AuthContext';
 import { createPedido } from './services/api';
+import ActualizacionDisponible from './components/ActualizacionDisponible';
 
 function createTicketData(cart, totalPrice, metodoPago, backendPedido) {
   const now = new Date(backendPedido.creado_en || Date.now());
@@ -38,7 +39,7 @@ function App() {
   const [ticket, setTicket] = useState(null);
   const [showMisPedidos, setShowMisPedidos] = useState(false);
   const [showMisDatos, setShowMisDatos] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [_isProcessing, setIsProcessing] = useState(false);
   const [adminModalProd, setAdminModalProd] = useState(null);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [catalogRefreshKey, setCatalogRefreshKey] = useState(0);
@@ -174,7 +175,7 @@ function App() {
       </footer>
 
       {/* Botón flotante del carrito */}
-      <button className="cart-fab" onClick={() => setCartOpen(true)} id="cart-fab-btn">
+      <button className="cart-fab" onClick={() => setCartOpen(true)} id="cart-fab-btn" aria-label="Abrir carrito de compras">
         🛒
         {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
       </button>
@@ -260,6 +261,8 @@ function App() {
             <span className="auth-fab-label">{token ? 'Cerrar sesión' : 'Login'}</span>
           </button>
       </div>
+
+      <ActualizacionDisponible />
     </>
   );
 }

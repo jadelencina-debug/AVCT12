@@ -14,7 +14,7 @@ export default function BotonArrepentimiento({ ultimaOrden }) {
   const [paso, setPaso] = useState('idle'); // idle | formulario | confirmado | fuera-de-plazo
 
   // Simula verificar si la orden está dentro del plazo de 10 días
-  const verificarPlazo = (numeroOrden) => {
+  const verificarPlazo = (_numeroOrden) => {
     // En producción esto se consulta al backend con la fecha real de la orden
     return true; // Para la demo siempre dentro de plazo
   };

@@ -11,7 +11,15 @@ export default function ProductCard({ producto, addToCart, cart, isAdmin, onEdit
         <div className="card">
             {imgSrc && (
                 <div className="card-img-wrapper">
-                    <img src={imgSrc} alt={nombre} className="card-img" />
+                    <img
+                        src={imgSrc}
+                        alt={nombre}
+                        className="card-img"
+                        width="300"
+                        height="185"
+                        loading="lazy"
+                        decoding="async"
+                    />
                 </div>
             )}
             <h3>{nombre}</h3>
