@@ -43,6 +43,9 @@ export const authRegister = async (userData) => {
 };
 
 export const getMe = async (token) => {
+    if (!token || token === 'undefined' || token === 'null') {
+        throw new Error("No hay token válido");
+    }
     const response = await fetch(`${BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
     });

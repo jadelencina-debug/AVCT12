@@ -7,7 +7,10 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem('access_token') || null);
+    const [token, setToken] = useState(() => {
+        const t = localStorage.getItem('access_token');
+        return (t && t !== 'undefined' && t !== 'null') ? t : null;
+    });
     const [isGuest, setIsGuest] = useState(false);
     const [loading, setLoading] = useState(true);
 
