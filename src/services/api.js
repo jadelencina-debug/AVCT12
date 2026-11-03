@@ -13,6 +13,34 @@ export const getProductos = async () => {
     }
 };
 
+/**
+ * Parsea de forma segura la respuesta HTTP usando response.text().
+ * Evita el error "Unexpected end of JSON input" si el body viene vacío.
+ */
+async function parseResponseData(response) {
+    const text = await response.text();
+    if (!text || !text.trim()) {
+        return null;
+    }
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { detail: text };
+    }
+}
+
+function extractErrorMessage(response, data, defaultMsg) {
+    if (data) {
+        if (typeof data.detail === 'string') return data.detail;
+        if (Array.isArray(data.detail)) {
+            return data.detail.map((err) => err.msg || JSON.stringify(err)).join(', ');
+        }
+        if (data.mensaje) return data.mensaje;
+        if (data.error) return data.error;
+    }
+    return `Error ${response.status}: ${response.statusText || defaultMsg}`;
+}
+
 export const authLogin = async (email, password) => {
     const formData = new URLSearchParams();
     formData.append('username', email);
@@ -22,11 +50,11 @@ export const authLogin = async (email, password) => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),
     });
-    const body = await response.json();
+    const body = await parseResponseData(response);
     if (!response.ok) {
-        throw new Error(body.detail || "Error en inicio de sesión");
+        throw new Error(extractErrorMessage(response, body, "Error en inicio de sesión"));
     }
-    return body;
+    return body || {};
 };
 
 export const authRegister = async (userData) => {
@@ -35,11 +63,11 @@ export const authRegister = async (userData) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
     });
-    const body = await response.json();
+    const body = await parseResponseData(response);
     if (!response.ok) {
-        throw new Error(body.detail || "Error en el registro");
+        throw new Error(extractErrorMessage(response, body, "Error en el registro"));
     }
-    return body;
+    return body || {};
 };
 
 export const getMe = async (token) => {

@@ -28,14 +28,17 @@ export default function AuthScreen() {
                     throw new Error("Las contraseñas no coinciden");
                 }
                 if (!aceptoTratamiento) {
-                    throw new Error("Debes aceptar el tratamiento de datos personales");
+                    throw new Error("Debes aceptar el tratamiento de datos personales (Ley 25.326)");
                 }
                 await register({ nombre, email, password, acepto_tratamiento: aceptoTratamiento });
-                setIsLoginView(true); // Cambiar a login después de registro exitoso
-                setErrorMsg("Registro exitoso. Por favor, inicia sesión."); // Opcional, o loguearlo automáticamente
+                setIsLoginView(true);
+                setPassword('');
+                setConfirmPassword('');
+                setErrorMsg("Registro exitoso. Por favor, inicia sesión.");
             }
         } catch (error) {
-            setErrorMsg(error.message);
+            console.error("Error en autenticación:", error);
+            setErrorMsg(error.message || "Ocurrió un error al procesar la solicitud.");
         } finally {
             setLoading(false);
         }

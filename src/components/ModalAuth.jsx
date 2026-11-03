@@ -36,8 +36,12 @@ export default function ModalAuth({ onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(regForm),
       });
-      const body = await res.json();
-      setRegResult({ ok: res.ok, status: res.status, body });
+      const text = await res.text();
+      let body = null;
+      if (text && text.trim()) {
+        try { body = JSON.parse(text); } catch { body = { detail: text }; }
+      }
+      setRegResult({ ok: res.ok, status: res.status, body: body || {} });
     } catch (err) {
       setRegResult({ ok: false, status: 0, body: { detail: 'Error de red: ' + err.message } });
     } finally {
@@ -64,9 +68,13 @@ export default function ModalAuth({ onClose }) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString(),
       });
-      const body = await res.json();
-      setLoginResult({ ok: res.ok, status: res.status, body });
-      if (res.ok && body.access_token) setToken(body.access_token);
+      const text = await res.text();
+      let body = null;
+      if (text && text.trim()) {
+        try { body = JSON.parse(text); } catch { body = { detail: text }; }
+      }
+      setLoginResult({ ok: res.ok, status: res.status, body: body || {} });
+      if (res.ok && body?.access_token) setToken(body.access_token);
     } catch (err) {
       setLoginResult({ ok: false, status: 0, body: { detail: 'Error de red: ' + err.message } });
     } finally {
